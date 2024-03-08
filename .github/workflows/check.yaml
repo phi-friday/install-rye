@@ -54,6 +54,21 @@ jobs:
           echo "        use uv: $(rye config --get behavior.use-uv)"
           if [[ "${{ steps.install-rye.outputs.rye-home }}" != "/opt/rye" ]]; then exit 1; fi
 
+  check-other-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: phi-friday/install-rye@main
+        id: install-rye
+        with:
+          python_version: 3.8.1
+
+      - name: echo stats
+        run: |
+          echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
+          echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
+          echo "python version: ${{ steps.install-rye.outputs.python-version }}"
+          echo "        use uv: $(rye config --get behavior.use-uv)"
+          if [[ "${{ steps.install-rye.outputs.python-version }}" != "3.8.1" ]]; then exit 1; fi
 
   check-without-uv:
     runs-on: ubuntu-latest
