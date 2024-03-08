@@ -35,7 +35,7 @@ jobs:
           echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
           echo "python version: ${{ steps.install-rye.outputs.python-version }}"
           echo "        use uv: $(rye config --get behavior.use-uv)"
-          if [[ "${{ steps.install-rye.outputs.rye-version }}" != "0.27.0" ]]; then exit 1 fi
+          if [[ "${{ steps.install-rye.outputs.rye-version }}" != "0.27.0" ]]; then exit 1; fi
 
 
   check-other-path:
@@ -52,7 +52,7 @@ jobs:
           echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
           echo "python version: ${{ steps.install-rye.outputs.python-version }}"
           echo "        use uv: $(rye config --get behavior.use-uv)"
-          if [[ "${{ steps.install-rye.outputs.rye-home }}" != "/opt/rye" ]]; then exit 1 fi
+          if [[ "${{ steps.install-rye.outputs.rye-home }}" != "/opt/rye" ]]; then exit 1; fi
 
 
   check-without-uv:
@@ -69,4 +69,4 @@ jobs:
           echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
           echo "python version: ${{ steps.install-rye.outputs.python-version }}"
           echo "        use uv: $(rye config --get behavior.use-uv)"
-          if [[ "$(rye config --get behavior.use-uv)" != "false" ]]; then exit 1 fi
+          if [[ "$(rye config --get behavior.use-uv)" != "false" ]]; then exit 1; fi
