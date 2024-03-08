@@ -12,3 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: phi-friday/install-rye@main
+        id: install-rye
+
+      - name: echo stats
+        run: |
+          echo    rye version: ${{ steps.install-rye.outputs.rye-version }}
+          echo       rye path: ${{ steps.install-rye.outputs.rye-path }}
+          echo python version: ${{ steps.install-rye.outputs.python-version }}

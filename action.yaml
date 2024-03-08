@@ -18,6 +18,7 @@ runs:
         RYE_HOME=$([ "${{ inputs.rye_home }}" = "null" ] && echo "$HOME/.rye" || echo "${{ inputs.rye_home }}")
         curl -sSf https://rye-up.com/get | bash
         echo "${RYE_HOME}/shims" >> $GITHUB_PATH
+
     - name: setup rye
       id: setup-rye
       shell: bash
