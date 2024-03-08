@@ -12,7 +12,7 @@ runs:
       id: prepare-rye
       shell: bash
       run: |
-        RYE_HOME=$([ "${{ inputs.rye_home }}" = "null" ] && echo "$HOME/.rye" || echo "${{ inputs.rye_home }}")
+        RYE_HOME=$([ -z "${{ inputs.rye_home }}" ] && echo "$HOME/.rye" || echo "${{ inputs.rye_home }}")
         echo rye home: $RYE_HOME
         echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
 
@@ -46,7 +46,7 @@ inputs:
     default: latest
   rye_home:
     description: Where to install rye
-    default: "null"
+    default: ""
   python_version:
     description: The version of python that rye will use in the workspace
     default: "3.12"
