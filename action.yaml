@@ -18,6 +18,7 @@ runs:
         RYE_HOME=$([ "${{ inputs.rye_home }}" = "null" ] && echo "$HOME/.rye" || echo "${{ inputs.rye_home }}")
         curl -sSf https://rye-up.com/get | bash
         echo "${RYE_HOME}/shims" >> $GITHUB_PATH
+        echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
 
     - name: setup rye
       id: setup-rye
@@ -29,7 +30,6 @@ runs:
         INSTALLED_RYE_VERSION=$(rye --version | awk '{print $2}' | head -n 1)
         PINNED_PYTHON_VERSION=$(cat .python-version)
         echo "rye-version=${INSTALLED_RYE_VERSION}" >> $GITHUB_OUTPUT
-        echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
         echo "python-version=${PINNED_PYTHON_VERSION}" >> $GITHUB_OUTPUT
 
 
@@ -53,7 +53,7 @@ outputs:
     value: ${{ steps.setup-rye.outputs.rye-version }}
   rye-home:
     description: installed rye path
-    value: ${{ steps.setup-rye.outputs.rye-path }}
+    value: ${{ steps.install-rye.outputs.rye-path }}
   python-version:
     description: pinned python version
     value: ${{ steps.setup-rye.outputs.python-version }}
