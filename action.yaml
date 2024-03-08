@@ -1,0 +1,49 @@
+name: install rye
+description: instal rye using in github action
+branding:
+  icon: download
+  color: white
+author: phi
+
+runs:
+  using: composite
+  steps:
+    - name: install rye
+      id: install-rye
+      shell: bash
+      env:
+        RYE_INSTALL_OPTION: '--yes'
+        RYE_VERSION: ${{ inputs.rye_version }}
+      run: |
+        RYE_HOME=$([ "${{ inputs.rye_home }}" = "null" ] && echo "$HOME/.rye" || echo "${{ inputs.rye_home }}")
+        curl -sSf https://rye-up.com/get | bash
+        echo "${RYE_HOME}/shims" >> $GITHUB_PATH
+        echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
+
+        INSTALLED_RYE_VERSION=$(rye --version | awk '{print $2}' | head -n 1)
+        echo "rye-version=${INSTALLED_RYE_VERSION}" >> $GITHUB_OUTPUT
+
+        rye config --set-bool behavior.use-uv=${{ inputs.use_uv }}
+        rey pin cpython@${{ inputs.python_version }}
+
+inputs:
+  rye_version:
+    description: rye version
+    default: latest
+  rye_home:
+    description: Where to install rye
+    default: "null"
+  python_version:
+    description: The version of python that rye will use in the workspace
+    default: "3.12"
+  use_uv:
+    description: if 'true', then use uv. else use pip-tools.
+    default: 'true'
+
+outputs:
+  rye-version:
+    description: installed rye version
+    value: ${{ steps.intall-rye.outputs.rye-version }}
+  rye-home:
+    description: installed rye path
+    value: ${{ steps.intall-rye.outputs.rye-path }}
