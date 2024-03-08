@@ -60,7 +60,7 @@ jobs:
       - uses: phi-friday/install-rye@main
         id: install-rye
         with:
-          python_version: 3.8.1
+          python_version: 3.8.15
 
       - name: echo stats
         run: |
@@ -68,7 +68,7 @@ jobs:
           echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
           echo "python version: ${{ steps.install-rye.outputs.python-version }}"
           echo "        use uv: $(rye config --get behavior.use-uv)"
-          if [[ "${{ steps.install-rye.outputs.python-version }}" != "3.8.1" ]]; then exit 1; fi
+          if [[ "${{ steps.install-rye.outputs.python-version }}" != "3.8.15" ]]; then exit 1; fi
 
   check-without-uv:
     runs-on: ubuntu-latest
