@@ -8,18 +8,24 @@ author: phi
 runs:
   using: composite
   steps:
+    - name: prepare rye
+      id: prepare-rye
+      shell: bash
+      run: |
+        RYE_HOME=$([ "${{ inputs.rye_home }}" = "null" ] && echo "$HOME/.rye" || echo "${{ inputs.rye_home }}")
+        echo rye home: $RYE_HOME
+        echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
+
     - name: install rye
       id: install-rye
       shell: bash
       env:
         RYE_INSTALL_OPTION: '--yes'
         RYE_VERSION: ${{ inputs.rye_version }}
+        RYE_HOME: ${{ steps.prepare-rye.outputs.rye-home }}
       run: |
-        RYE_HOME=$([ "${{ inputs.rye_home }}" = "null" ] && echo "$HOME/.rye" || echo "${{ inputs.rye_home }}")
-        echo rye home: $RYE_HOME
         curl -sSf https://rye-up.com/get | bash
         echo "${RYE_HOME}/shims" >> $GITHUB_PATH
-        echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
 
     - name: setup rye
       id: setup-rye
@@ -54,7 +60,7 @@ outputs:
     value: ${{ steps.setup-rye.outputs.rye-version }}
   rye-home:
     description: installed rye path
-    value: ${{ steps.install-rye.outputs.rye-home }}
+    value: ${{ steps.prepare-rye.outputs.rye-home }}
   python-version:
     description: pinned python version
     value: ${{ steps.setup-rye.outputs.python-version }}
