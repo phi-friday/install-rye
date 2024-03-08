@@ -1,0 +1,13 @@
+name: test run
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "action.yaml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: phi-friday/install-rye@main
