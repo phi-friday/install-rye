@@ -19,6 +19,23 @@ jobs:
           echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
           echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
           echo "python version: ${{ steps.install-rye.outputs.python-version }}"
+          echo "        use uv: $(rye config --get behavior.use-uv)"
+
+  check-other-rye:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: phi-friday/install-rye@main
+        id: install-rye
+        with:
+          rye_version: 0.27.0
+
+      - name: echo stats
+        run: |
+          echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
+          echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
+          echo "python version: ${{ steps.install-rye.outputs.python-version }}"
+          echo "        use uv: $(rye config --get behavior.use-uv)"
+
 
   check-other-path:
     runs-on: ubuntu-latest
@@ -33,3 +50,20 @@ jobs:
           echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
           echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
           echo "python version: ${{ steps.install-rye.outputs.python-version }}"
+          echo "        use uv: $(rye config --get behavior.use-uv)"
+
+
+  check-without-uv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: phi-friday/install-rye@main
+        id: install-rye
+        with:
+          use_uv: false
+
+      - name: echo stats
+        run: |
+          echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
+          echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
+          echo "python version: ${{ steps.install-rye.outputs.python-version }}"
+          echo "        use uv: $(rye config --get behavior.use-uv)"
