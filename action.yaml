@@ -53,7 +53,7 @@ outputs:
     value: ${{ steps.setup-rye.outputs.rye-version }}
   rye-home:
     description: installed rye path
-    value: ${{ steps.install-rye.outputs.rye-path }}
+    value: ${{ steps.install-rye.outputs.rye-home }}
   python-version:
     description: pinned python version
     value: ${{ steps.setup-rye.outputs.python-version }}
