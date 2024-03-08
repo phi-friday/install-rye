@@ -16,6 +16,7 @@ runs:
         RYE_VERSION: ${{ inputs.rye_version }}
       run: |
         RYE_HOME=$([ "${{ inputs.rye_home }}" = "null" ] && echo "$HOME/.rye" || echo "${{ inputs.rye_home }}")
+        echo rye home: $RYE_HOME
         curl -sSf https://rye-up.com/get | bash
         echo "${RYE_HOME}/shims" >> $GITHUB_PATH
         echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
