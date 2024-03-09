@@ -59,3 +59,6 @@ outputs:
   python-version:
     description: pinned python version
     value: ${{ steps.setup-rye.outputs.python-version }}
+  use-uv:
+    description: use uv flag
+    value: ${{ steps.setup-rye.outputs.use-uv }}
