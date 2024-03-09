@@ -85,7 +85,9 @@ jobs:
         with:
           rye_home: /opt/rye
       
-      - run: cat $(rye config --show-path)
+      - run: |
+          rye config --show-path
+          cat $(rye config --show-path)
 
       - uses: actions/cache@v4
         with:
@@ -117,6 +119,7 @@ jobs:
       - name: run rye
         run: |
           rye --version
+          rye config --show-path
           cat $(rye config --show-path)
 
   remove-cache:
