@@ -6,6 +6,7 @@ on:
     paths:
       - "**/action.yaml"
       - "**/check.yaml"
+      - "src/**/**.sh"
 
 jobs:
   check:
