@@ -103,23 +103,27 @@ jobs:
         with:
           path: /opt/rye
           key: "${{ needs.prepare-cache.outputs.cache-id }}"
-        
+
       - name: check cache hit(false)
         if: steps.get-cache.outputs.cache-hit != 'true'
         run: exit 1
-      
+
       - name: add path
         if: steps.get-cache.outputs.cache-hit == 'true'
         run: echo "/opt/rye/shims" >> $GITHUB_PATH
-      
+
       - name: run rye
         run: rye --version
 
   remove-cache:
     if: ${{ always() }}
     runs-on: ubuntu-latest
-    needs: prepare-cache
+    needs:
+      - prepare-cache
+      - cache
     steps:
       - name: remove cache
         id: remove-cache
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: gh cache delete "${{ needs.prepare-cache.outputs.cache-id }}"
