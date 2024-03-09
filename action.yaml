@@ -16,7 +16,7 @@ runs:
         INPUT_RYE_HOME: ${{ inputs.rye-home }}
         INPUT_PYTHON_VERSION: ${{ inputs.python-version }}
         INPUT_USE_UV: ${{ inputs.use-uv }}
-      run: $GITHUB_ACTION_PATH/src/prepare.sh
+      run: $GITHUB_ACTION_PATH/src/action/prepare.sh
 
     - name: install rye
       id: install-rye
@@ -25,7 +25,7 @@ runs:
         RYE_INSTALL_OPTION: '--yes'
         RYE_VERSION: ${{ steps.prepare-rye.outputs.rye-version }}
         RYE_HOME: ${{ steps.prepare-rye.outputs.rye-home }}
-      run: $GITHUB_ACTION_PATH/src/install.sh
+      run: $GITHUB_ACTION_PATH/src/action/install.sh
 
     - name: setup rye
       id: setup-rye
@@ -33,7 +33,7 @@ runs:
       env:
         INPUT_PYTHON_VERSION: ${{ steps.prepare-rye.outputs.python-version }}
         INPUT_USE_UV: ${{ steps.prepare-rye.outputs.use-uv }}
-      run: $GITHUB_ACTION_PATH/src/setup.sh
+      run: $GITHUB_ACTION_PATH/src/action/setup.sh
 
 inputs:
   rye_version:
