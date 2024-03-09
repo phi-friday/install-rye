@@ -8,6 +8,9 @@ on:
       - "**/check.yaml"
       - "src/**/**.sh"
 
+permissions:
+  actions: write
+
 jobs:
   check:
     runs-on: ubuntu-latest
