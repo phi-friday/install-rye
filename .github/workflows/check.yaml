@@ -116,7 +116,9 @@ jobs:
         if: steps.get-cache.outputs.cache-hit == 'true'
         run: echo "/opt/rye/shims" >> $GITHUB_PATH
 
-      - name: run rye
+      - env:
+          RYE_HOME: /opt/rye
+        name: run rye
         run: |
           rye --version
           rye config --show-path
