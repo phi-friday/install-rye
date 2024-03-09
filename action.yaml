@@ -38,16 +38,16 @@ runs:
 inputs:
   rye_version:
     description: rye version
-    default: latest
+    default: "default"
   rye_home:
     description: Where to install rye
-    default: ""
+    default: "default"
   python_version:
     description: The version of python that rye will use in the workspace
-    default: "3.12"
+    default: "default"
   use_uv:
     description: if 'true', then use uv. else use pip-tools.
-    default: 'true'
+    default: "default"
 
 outputs:
   rye-version:
