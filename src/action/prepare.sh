@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-RYE_VERSION=$(   [    "$INPUT_RYE_VERSION" = "default" ] && echo "latest" || echo "$INPUT_RYE_VERSION")
-RYE_HOME=$(      [       "$INPUT_RYE_HOME" = "default" ] && echo       "" || echo "$INPUT_RYE_HOME")
-PYTHON_VERSION=$([ "$INPUT_PYTHON_VERSION" = "default" ] && echo   "3.12" || echo "$INPUT_PYTHON_VERSION")
-USE_UV=$(        [         "$INPUT_USE_UV" = "default" ] && echo   "true" || echo "$INPUT_USE_UV")
+function set_default {
+    [ "$1" = "default" ] && echo "$2" || echo "$1"
+}
+
+RYE_VERSION=$(    set_default $INPUT_RYE_VERSION    "latest" )
+RYE_HOME=$(       set_default $INPUT_RYE_HOME       ""       )
+PYTHON_VERSION=$( set_default $INPUT_PYTHON_VERSION "3.12"   )
+USE_UV=$(         set_default $INPUT_USE_UV         "true"   )
 
 RYE_HOME=$([ -z "$RYE_HOME" ] && echo "$HOME/.rye" || echo "$RYE_HOME")
 
