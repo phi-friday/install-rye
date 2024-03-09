@@ -126,4 +126,4 @@ jobs:
         id: remove-cache
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh cache delete "${{ needs.prepare-cache.outputs.cache-id }}"
+        run: gh cache delete "${{ needs.prepare-cache.outputs.cache-id }}" --repo phi-friday/install-rye
