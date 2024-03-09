@@ -8,9 +8,6 @@ on:
       - "**/check.yaml"
       - "src/**/**.sh"
 
-permissions:
-  actions: write
-
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -121,6 +118,8 @@ jobs:
   remove-cache:
     if: ${{ always() }}
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     needs:
       - prepare-cache
       - cache
