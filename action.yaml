@@ -12,10 +12,10 @@ runs:
       id: prepare-rye
       shell: bash
       env:
-        INPUT_RYE_VERSION: ${{ inputs.rye-version }}
-        INPUT_RYE_HOME: ${{ inputs.rye-home }}
-        INPUT_PYTHON_VERSION: ${{ inputs.python-version }}
-        INPUT_USE_UV: ${{ inputs.use-uv }}
+        INPUT_RYE_VERSION: ${{ inputs.rye_version }}
+        INPUT_RYE_HOME: ${{ inputs.rye_home }}
+        INPUT_PYTHON_VERSION: ${{ inputs.python_version }}
+        INPUT_USE_UV: ${{ inputs.use_uv }}
       run: $GITHUB_ACTION_PATH/src/action/prepare.sh
 
     - name: install rye
