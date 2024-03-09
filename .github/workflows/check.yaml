@@ -10,78 +10,67 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    steps:
-      - uses: phi-friday/install-rye@main
-        id: install-rye
 
-      - name: echo stats
-        run: |
-          echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
-          echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
-          echo "python version: ${{ steps.install-rye.outputs.python-version }}"
-          echo "        use uv: $(rye config --get behavior.use-uv)"
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          # default
+          - rye_version: "default"
+            rye_home: "default"
+            python_version: "default"
+            use_uv: "default"
+            name: "default"
+          # check rye version
+          - rye_version: "0.27.0"
+            rye_home: "default"
+            python_version: "default"
+            use_uv: "default"
+            name: "check rye version"
+          # check rye home
+          - rye_version: "default"
+            rye_home: "/opt/rye"
+            python_version: "default"
+            use_uv: "default"
+            name: "check rye home"
+          # check python version
+          - rye_version: "default"
+            rye_home: "default"
+            python_version: "3.8.15"
+            use_uv: "default"
+            name: "check python version"
+          # check use uv flag
+          - rye_version: "default"
+            rye_home: "default"
+            python_version: "default"
+            use_uv: "false"
+            name: "check use uv"
 
-  check-other-rye:
-    runs-on: ubuntu-latest
     steps:
-      - uses: phi-friday/install-rye@main
+      - uses: phi-friday/install-rye@${{ github.sha }}
         id: install-rye
+        name: "${{ matrix.name }}"
         with:
-          rye_version: 0.27.0
+          rye_version: "${{ matrix.rye_version }}"
+          rye_home: "${{ matrix.rye_home }}"
+          python_version: "${{ matrix.python_version }}"
+          use_uv: "${{ matrix.use_uv }}"
 
       - name: echo stats
         run: |
-          echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
-          echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
-          echo "python version: ${{ steps.install-rye.outputs.python-version }}"
-          echo "        use uv: $(rye config --get behavior.use-uv)"
-          if [[ "${{ steps.install-rye.outputs.rye-version }}" != "0.27.0" ]]; then exit 1; fi
-
-
-  check-other-path:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: phi-friday/install-rye@main
-        id: install-rye
-        with:
-          rye_home: /opt/rye
-
-      - name: echo stats
-        run: |
-          echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
-          echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
-          echo "python version: ${{ steps.install-rye.outputs.python-version }}"
-          echo "        use uv: $(rye config --get behavior.use-uv)"
-          if [[ "${{ steps.install-rye.outputs.rye-home }}" != "/opt/rye" ]]; then exit 1; fi
-
-  check-other-python:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: phi-friday/install-rye@main
-        id: install-rye
-        with:
-          python_version: 3.8.15
-
-      - name: echo stats
-        run: |
-          echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
-          echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
-          echo "python version: ${{ steps.install-rye.outputs.python-version }}"
-          echo "        use uv: $(rye config --get behavior.use-uv)"
-          if [[ "${{ steps.install-rye.outputs.python-version }}" != "3.8.15" ]]; then exit 1; fi
-
-  check-without-uv:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: phi-friday/install-rye@main
-        id: install-rye
-        with:
-          use_uv: false
-
-      - name: echo stats
-        run: |
-          echo "   rye version: ${{ steps.install-rye.outputs.rye-version }}"
-          echo "      rye home: ${{ steps.install-rye.outputs.rye-home }}"
-          echo "python version: ${{ steps.install-rye.outputs.python-version }}"
-          echo "        use uv: $(rye config --get behavior.use-uv)"
-          if [[ "$(rye config --get behavior.use-uv)" != "false" ]]; then exit 1; fi
+          EXPECTED_RYE_VERSION=$([ "${{ matrix.rye_version }}" = "default" ] && echo "latest" || echo "${{ matrix.rye_version }}")
+          EXPECTED_RYE_HOME=$([ "${{ matrix.rye_home }}" = "default" ] && echo "" || echo "${{ matrix.rye_home }}")
+          EXPECTED_PYTHON_VERSION=$([ "${{ matrix.python_version }}" = "default" ] && echo "3.12" || echo "${{ matrix.python_version }}")
+          EXPECTED_USE_UV=$([ "${{ matrix.use_uv }}" = "default" ] && echo "true" || echo "${{ matrix.use_uv }}")
+          REAL_RYE_VERSION="${{ steps.install-rye.outputs.rye-version }}"
+          REAL_RYE_HOME="${{ steps.install-rye.outputs.rye-home }}"
+          REAL_PYTHON_VERSION="${{ steps.install-rye.outputs.python-version }}"
+          REAL_USE_UV="$(rye config --get behavior.use-uv)"
+          echo "   rye version: ${REAL_RYE_VERSION}"
+          echo "      rye home: ${REAL_RYE_HOME}"
+          echo "python version: ${REAL_PYTHON_VERSION}"
+          echo "        use uv: ${REAL_USE_UV}"
+          if [[    "$EXPECTED_RYE_VERSION" != "$REAL_RYE_VERSION"    ]]; then exit 1; fi
+          if [[       "$EXPECTED_RYE_HOME" != "$REAL_RYE_HOME"       ]]; then exit 1; fi
+          if [[ "$EXPECTED_PYTHON_VERSION" != "$REAL_PYTHON_VERSION" ]]; then exit 1; fi
+          if [[         "$EXPECTED_USE_UV" != "$REAL_USE_UV"         ]]; then exit 1; fi
