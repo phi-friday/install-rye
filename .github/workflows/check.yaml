@@ -47,7 +47,19 @@ jobs:
             name: "check use uv"
 
     steps:
-      - uses: phi-friday/install-rye@${{ github.sha }}
+      - id: prepare-test-if-pr
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          echo "COMMIT_ID=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+      - id: prepare-test-if-push
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          echo "COMMIT_ID=${GITHUB_SHA}" >> $GITHUB_ENV
+      - id: prepare-test
+        run: |
+          echo "commit-id=${COMMIT_ID}" >> $GITHUB_OUTPUT
+
+      - uses: phi-friday/install-rye@${{ steps.prepare-test.outputs.commit-id }}
         id: install-rye
         name: "${{ matrix.name }}"
         with:
