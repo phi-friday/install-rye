@@ -4,7 +4,7 @@ install [rye](https://github.com/astral-sh/rye) in github action
 
 ## how to use
 ```yaml
-- uses: phi-friday/install-rye@v1
+- uses: phi-friday/install-rye@v1.1
   id: install-rye
   with:
     rye_version: "latest" # optional
@@ -28,3 +28,8 @@ installed rye path
 
 pinned python version
 > ex: `3.12.2`
+
+4. `use-uv`
+
+use uv flag
+> ex: `true`
