@@ -45,7 +45,7 @@ jobs:
             python_version: "default"
             use_uv: "false"
             name: "check use uv"
-    
+
     name: "${{ matrix.name }}"
     steps:
       - uses: actions/checkout@v4
@@ -70,3 +70,56 @@ jobs:
           REAL_PYTHON_VERSION: "${{ steps.install-rye.outputs.python-version }}"
           REAL_USE_UV: "${{ steps.install-rye.outputs.use-uv }}"
         run: ./src/action/check.sh
+
+  prepare-cache:
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: create-id
+        run: |
+          UUID=$(uuidgen)
+          echo "cache-id=${UUID}" >> $GITHUB_OUTPUT
+
+      - uses: phi-friday/install-rye@main
+        id: install-rye
+        with:
+          rye_home: /opt/rye
+
+      - uses: actions/cache@v4
+        with:
+          path: /opt/rye
+          key: "${{ steps.create-id.outputs.cache-id }}"
+
+    outputs:
+      cache-id: "${{ steps.create-id.outputs.cache-id }}"
+
+  cache:
+    runs-on: ubuntu-latest
+    needs: prepare-cache
+
+    steps:
+      - uses: actions/cache@v4
+        id: get-cache
+        with:
+          path: /opt/rye
+          key: "${{ jobs.prepare-cache.outputs.cache-id }}"
+        
+      - name: check cache hit(false)
+        if: steps.get-cache.outputs.cache-hit != 'true'
+        run: exit 1
+      
+      - name: add path
+        if: steps.get-cache.outputs.cache-hit == 'true'
+        run: echo "/opt/rye/shims" >> $GITHUB_PATH
+      
+      - name: run rye
+        run: rye --version
+
+  remove-cache:
+    if: success(prepare-cache)
+    runs-on: ubuntu-latest
+    needs: prepare-cache
+    steps:
+      - name: remove cache
+        id: remove-cache
+        run: gh cache delete "${{ jobs.prepare-cache.outputs.cache-id }}"
