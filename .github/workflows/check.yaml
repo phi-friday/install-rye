@@ -102,7 +102,7 @@ jobs:
         id: get-cache
         with:
           path: /opt/rye
-          key: "${{ jobs.prepare-cache.outputs.cache-id }}"
+          key: "${{ needs.prepare-cache.outputs.cache-id }}"
         
       - name: check cache hit(false)
         if: steps.get-cache.outputs.cache-hit != 'true'
@@ -122,4 +122,4 @@ jobs:
     steps:
       - name: remove cache
         id: remove-cache
-        run: gh cache delete "${{ jobs.prepare-cache.outputs.cache-id }}"
+        run: gh cache delete "${{ needs.prepare-cache.outputs.cache-id }}"
