@@ -84,6 +84,8 @@ jobs:
         id: install-rye
         with:
           rye_home: /opt/rye
+      
+      - run: cat $(rye config --show-path)
 
       - uses: actions/cache@v4
         with:
@@ -113,7 +115,9 @@ jobs:
         run: echo "/opt/rye/shims" >> $GITHUB_PATH
 
       - name: run rye
-        run: rye --version
+        run: |
+          rye --version
+          cat $(rye config --show-path)
 
   remove-cache:
     if: ${{ always() }}
