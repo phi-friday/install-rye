@@ -57,14 +57,20 @@ jobs:
 
       - name: echo stats
         run: |
-          EXPECTED_RYE_VERSION=$([ "${{ matrix.rye_version }}" = "default" ] && echo "latest" || echo "${{ matrix.rye_version }}")
-          EXPECTED_RYE_HOME=$([ "${{ matrix.rye_home }}" = "default" ] && echo "" || echo "${{ matrix.rye_home }}")
-          EXPECTED_PYTHON_VERSION=$([ "${{ matrix.python_version }}" = "default" ] && echo "3.12" || echo "${{ matrix.python_version }}")
-          EXPECTED_USE_UV=$([ "${{ matrix.use_uv }}" = "default" ] && echo "true" || echo "${{ matrix.use_uv }}")
           REAL_RYE_VERSION="${{ steps.install-rye.outputs.rye-version }}"
           REAL_RYE_HOME="${{ steps.install-rye.outputs.rye-home }}"
           REAL_PYTHON_VERSION="${{ steps.install-rye.outputs.python-version }}"
           REAL_USE_UV="$(rye config --get behavior.use-uv)"
+          EXPECTED_RYE_VERSION=$([ "${{ matrix.rye_version }}" = "default" ] && echo "$REAL_RYE_VERSION" || echo "${{ matrix.rye_version }}")
+          EXPECTED_RYE_HOME=$([ "${{ matrix.rye_home }}" = "default" ] && echo "$REAL_RYE_HOME" || echo "${{ matrix.rye_home }}")
+          EXPECTED_PYTHON_VERSION=$([ "${{ matrix.python_version }}" = "default" ] && echo "$REAL_PYTHON_VERSION" || echo "${{ matrix.python_version }}")
+          EXPECTED_USE_UV=$([ "${{ matrix.use_uv }}" = "default" ] && echo "$REAL_USE_UV" || echo "${{ matrix.use_uv }}")
+          echo "expected:"
+          echo "   rye version: ${EXPECTED_RYE_VERSION}"
+          echo "      rye home: ${EXPECTED_RYE_HOME}"
+          echo "python version: ${EXPECTED_PYTHON_VERSION}"
+          echo "        use uv: ${EXPECTED_USE_UV}"
+          echo "real:"
           echo "   rye version: ${REAL_RYE_VERSION}"
           echo "      rye home: ${REAL_RYE_HOME}"
           echo "python version: ${REAL_PYTHON_VERSION}"
