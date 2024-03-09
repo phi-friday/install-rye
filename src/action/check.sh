@@ -2,7 +2,7 @@
 
 # https://stackoverflow.com/a/4774063
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-DEFINE_SCRIPT=${SCRIPTPATH}/prepare.sh
+DEFINE_SCRIPT=${SCRIPTPATH}/define.sh
 PREPARE_SCRIPT=${SCRIPTPATH}/prepare.sh
 
 source $DEFINE_SCRIPT
