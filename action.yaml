@@ -11,21 +11,12 @@ runs:
     - name: prepare rye
       id: prepare-rye
       shell: bash
-      run: |
-        RYE_VERSION=$([ "${{ inputs.rye_version }}" = "default" ] && echo "latest" || echo "${{ inputs.rye_version }}")
-        RYE_HOME=$([ "${{ inputs.rye_home }}" = "default" ] && echo "" || echo "${{ inputs.rye_home }}")
-        PYTHON_VERSION=$([ "${{ inputs.python_version }}" = "default" ] && echo "3.12" || echo "${{ inputs.python_version }}")
-        USE_UV=$([ "${{ inputs.use_uv }}" = "default" ] && echo "true" || echo "${{ inputs.use_uv }}")
-        RYE_HOME=$([ -z "$RYE_HOME" ] && echo "$HOME/.rye" || echo "$RYE_HOME")
-        echo "   rye version: $RYE_VERSION"
-        echo "      rye home: $RYE_HOME"
-        echo "python version: $PYTHON_VERSION"
-        echo "        use uv: $USE_UV"
-        echo "rye-version=${RYE_VERSION}" >> $GITHUB_OUTPUT
-        echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
-        echo "python-version=${PYTHON_VERSION}" >> $GITHUB_OUTPUT
-        echo "use-uv=${USE_UV}" >> $GITHUB_OUTPUT
-
+      env:
+        INPUT_RYE_VERSION: ${{ inputs.rye-version }}
+        INPUT_RYE_HOME: ${{ inputs.rye-home }}
+        INPUT_PYTHON_VERSION: ${{ inputs.python-version }}
+        INPUT_USE_UV: ${{ inputs.use-uv }}
+      run: $GITHUB_ACTION_PATH/src/prepare.sh
 
     - name: install rye
       id: install-rye
@@ -34,21 +25,15 @@ runs:
         RYE_INSTALL_OPTION: '--yes'
         RYE_VERSION: ${{ steps.prepare-rye.outputs.rye-version }}
         RYE_HOME: ${{ steps.prepare-rye.outputs.rye-home }}
-      run: |
-        curl -sSf https://rye-up.com/get | bash
-        echo "${RYE_HOME}/shims" >> $GITHUB_PATH
+      run: $GITHUB_ACTION_PATH/src/install.sh
 
     - name: setup rye
       id: setup-rye
       shell: bash
-      run: |
-        rye config --set-bool behavior.use-uv=${{ steps.prepare-rye.outputs.use-uv }}
-        rye pin cpython@${{ steps.prepare-rye.outputs.python-version }}
-
-        INSTALLED_RYE_VERSION=$(rye --version | awk '{print $2}' | head -n 1)
-        PINNED_PYTHON_VERSION=$(cat .python-version)
-        echo "rye-version=${INSTALLED_RYE_VERSION}" >> $GITHUB_OUTPUT
-        echo "python-version=${PINNED_PYTHON_VERSION}" >> $GITHUB_OUTPUT
+      env:
+        INPUT_PYTHON_VERSION: ${{ steps.prepare-rye.outputs.python-version }}
+        INPUT_USE_UV: ${{ steps.prepare-rye.outputs.use-uv }}
+      run: $GITHUB_ACTION_PATH/src/setup.sh
 
 inputs:
   rye_version:
