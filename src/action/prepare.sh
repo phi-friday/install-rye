@@ -17,7 +17,7 @@ echo "      rye home: $RYE_HOME"
 echo "python version: $PYTHON_VERSION"
 echo "        use uv: $USE_UV"
 
-echo "rye-version=${RYE_VERSION}" >> $GITHUB_OUTPUT
-echo "rye-home=${RYE_HOME}" >> $GITHUB_OUTPUT
+echo "rye-version=${RYE_VERSION}"       >> $GITHUB_OUTPUT
+echo "rye-home=${RYE_HOME}"             >> $GITHUB_OUTPUT
 echo "python-version=${PYTHON_VERSION}" >> $GITHUB_OUTPUT
-echo "use-uv=${USE_UV}" >> $GITHUB_OUTPUT
+echo "use-uv=${USE_UV}"                 >> $GITHUB_OUTPUT
