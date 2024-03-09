@@ -7,8 +7,12 @@ function check_variable {
     fi
 }
 
+# https://stackoverflow.com/a/4774063
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+PREPARE_SCRIPT=${SCRIPTPATH}/prepare.sh
+
 echo "expected:"
-source prepare.sh
+source $PREPARE_SCRIPT
 
 echo "real:"
 echo "   rye version: ${REAL_RYE_VERSION}"
