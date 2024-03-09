@@ -7,6 +7,12 @@ PREPARE_SCRIPT=${SCRIPTPATH}/prepare.sh
 
 source $DEFINE_SCRIPT
 
+echo "input:"
+echo "   rye version: ${INPUT_RYE_VERSION}"
+echo "      rye home: ${INPUT_RYE_HOME}"
+echo "python version: ${INPUT_PYTHON_VERSION}"
+echo "        use uv: ${INPUT_USE_UV}"
+
 INPUT_RYE_VERSION=$(    set_default $INPUT_RYE_VERSION    $REAL_RYE_VERSION    )
 INPUT_RYE_HOME=$(       set_default $INPUT_RYE_HOME       $REAL_RYE_HOME       )
 INPUT_PYTHON_VERSION=$( set_default $INPUT_PYTHON_VERSION $REAL_PYTHON_VERSION )
