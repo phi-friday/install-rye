@@ -116,7 +116,7 @@ jobs:
         run: rye --version
 
   remove-cache:
-    if: success(prepare-cache)
+    if: needs.prepare-cache.result == "success"
     runs-on: ubuntu-latest
     needs: prepare-cache
     steps:
