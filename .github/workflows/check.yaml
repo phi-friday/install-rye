@@ -19,7 +19,7 @@ jobs:
             rye_home: "default"
             python_version: "default"
             use_uv: "default"
-            name: "default"
+            name: "check default"
           # check rye version
           - rye_version: "0.27.0"
             rye_home: "default"
@@ -45,6 +45,7 @@ jobs:
             use_uv: "false"
             name: "check use uv"
 
+    name: "${{ matrix.name }}"
     steps:
       - uses: phi-friday/install-rye@main
         id: install-rye
