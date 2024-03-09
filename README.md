@@ -13,6 +13,31 @@ install [rye](https://github.com/astral-sh/rye) in github action
     use_uv: true # optional
 ```
 
+### with cache
+```yaml
+strategy:
+  fail-fast: true
+  matrix:
+    include:
+      - rye_version: "0.28.0"
+        rye_home: "/opt/rye"
+        use_uv: "true"
+
+steps:
+  - uses: actions/cache@v4
+    id: get-cache
+    key: "${{ matrix.rye_version }}-${{ matrix.use_uv }}"
+    path: "${{ matrix.rye_home }}"
+
+  - uses: phi-friday/install-rye@v1.1
+    if: steps.get-cache.outputs.cache-hit != 'true'
+    id: install-rye
+    with:
+      rye_version: "${{ matrix.rye_version }}"
+      rye_home: "${{ matrix.rye_home }}"
+      use_uv: "${{ matrix.use_uv }}"
+```
+
 ## output
 1. `rye-version`
 
