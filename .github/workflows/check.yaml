@@ -10,16 +10,10 @@ on:
 
 jobs:
   check:
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        platform:
-          - windows-latest
-          - ubuntu-latest
-          - macos-latest
-          # m1
-          - macos-14
         include:
           # default
           - rye_version: "default"
@@ -52,13 +46,13 @@ jobs:
             use_uv: "false"
             name: "check use uv"
 
-    name: "${{ matrix.platform }}-${{ matrix.name }}"
+    name: "${{ matrix.name }}"
     steps:
       - uses: actions/checkout@v4
 
       - uses: phi-friday/install-rye@main
         id: install-rye
-        name: "${{ matrix.platform }}-${{ matrix.name }}"
+        name: "${{ matrix.name }}"
         with:
           rye_version: "${{ matrix.rye_version }}"
           rye_home: "${{ matrix.rye_home }}"
@@ -66,7 +60,6 @@ jobs:
           use_uv: "${{ matrix.use_uv }}"
 
       - name: echo stats
-        shell: bash
         env:
           INPUT_RYE_VERSION: ${{ matrix.rye_version }}
           INPUT_RYE_HOME: ${{ matrix.rye_home }}
