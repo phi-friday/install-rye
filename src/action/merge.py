@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import logging
 import sys
 from pathlib import Path
 from typing import Any
 
 import toml  # pyright: ignore[reportMissingModuleSource]
+
+logger = logging.getLogger("install-rye.merge")
+logger.addHandler(logging.StreamHandler(sys.stdout))
+logger.setLevel(logging.INFO)
 
 
 def load_toml(path: str | Path) -> dict[str, Any] | None:
@@ -16,6 +21,7 @@ def load_toml(path: str | Path) -> dict[str, Any] | None:
     path = path.resolve()
 
     if not path.exists():
+        logger.info("there is no file: %s", path)
         return None
 
     with path.open("r") as file:
@@ -54,6 +60,9 @@ def dump_toml(path: str | Path, data: dict[str, Any]) -> None:
 
 
 def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
+    logger.info("output: %s")
+    logger.info("targets: %s", files)
+
     data = load_toml(file)
     if data is None:
         raise FileNotFoundError(file)
