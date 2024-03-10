@@ -60,7 +60,7 @@ def dump_toml(path: str | Path, data: dict[str, Any]) -> None:
 
 
 def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
-    logger.info("output: %s")
+    logger.info("output: %s", file)
     logger.info("targets: %s", files)
 
     data = load_toml(file)
