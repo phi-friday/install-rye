@@ -4,7 +4,7 @@ install [rye](https://github.com/astral-sh/rye) in github action
 
 ## how to use
 ```yaml
-- uses: phi-friday/install-rye@v1.1
+- uses: phi-friday/install-rye@v1.2
   id: install-rye
   with:
     rye_version: "latest" # optional
@@ -29,7 +29,7 @@ steps:
     key: "${{ matrix.rye_version }}-${{ matrix.use_uv }}"
     path: "${{ matrix.rye_home }}"
 
-  - uses: phi-friday/install-rye@v1.1
+  - uses: phi-friday/install-rye@v1.2
     if: steps.get-cache.outputs.cache-hit != 'true'
     id: install-rye
     with:
