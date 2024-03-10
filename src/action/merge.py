@@ -25,7 +25,10 @@ def load_toml(path: str | Path) -> dict[str, Any] | None:
         return None
 
     with path.open("r") as file:
-        return toml.load(file)
+        result = toml.load(file)
+
+    logger.info("path: %s, data: %s", path, result)
+    return result
 
 
 def merge_toml(*datas: dict[str, Any]) -> dict[str, Any]:
