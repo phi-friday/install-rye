@@ -83,6 +83,8 @@ jobs:
 
       - uses: phi-friday/install-rye@main
         id: install-rye
+        env:
+          IS_DEBUG: "1"
         with:
           rye_home: /opt/rye
       
