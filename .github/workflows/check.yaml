@@ -14,12 +14,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform:
-          - windows-latest
-          - ubuntu-latest
-          - macos-latest
-          # m1
-          - macos-14
+        platform: [windows-latest, ubuntu-latest, macos-latest, macos-14]
         include:
           # default
           - rye_version: "default"
@@ -27,30 +22,35 @@ jobs:
             python_version: "default"
             use_uv: "default"
             name: "check default"
+            id: 0
           # check rye version
           - rye_version: "0.27.0"
             rye_home: "default"
             python_version: "default"
             use_uv: "default"
             name: "check rye version"
+            id: 1
           # check rye home
           - rye_version: "default"
             rye_home: "/opt/rye"
             python_version: "default"
             use_uv: "default"
             name: "check rye home"
+            id: 2
           # check python version
           - rye_version: "default"
             rye_home: "default"
             python_version: "3.8.15"
             use_uv: "default"
             name: "check python version"
+            id: 3
           # check use uv flag
           - rye_version: "default"
             rye_home: "default"
             python_version: "default"
             use_uv: "false"
             name: "check use uv"
+            id: 4
 
     name: "${{ matrix.platform }}-${{ matrix.name }}"
     steps:
