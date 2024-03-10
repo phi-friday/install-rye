@@ -1,11 +1,11 @@
-name: test run
+name: test in unix
 
 on:
   push:
     branches: [main]
     paths:
-      - "**/action.yaml"
-      - "**/check.yaml"
+      - "action.yaml"
+      - ".github/workflows/check.yaml"
       - "src/**/**.sh"
 
 jobs:
