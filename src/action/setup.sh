@@ -6,13 +6,20 @@ MERGE_SCRIPT=${SCRIPTPATH}/merge.py
 
 rye config --set-bool behavior.use-uv=$INPUT_USE_UV
 
+INSTALLED_RYE_HOME=$(dirname $(dirname $(which rye)))
+RYE_CONFIG_PATH=$(rye config --show-path)
+INSTALLED_RYE_CONFIG_PATH=$INSTALLED_RYE_HOME/config.toml
 python3 -m pip install --user toml
-python3 $MERGE_SCRIPT $(rye config --show-path) $HOME/.rye/config.toml
+python3 $MERGE_SCRIPT $HOME/.rye/config.toml $RYE_CONFIG_PATH $INSTALLED_RYE_CONFIG_PATH
+if [ "$HOME/.rye/config.toml" != "$INSTALLED_RYE_CONFIG_PATH" ]; then
+    [ -e $INSTALLED_RYE_CONFIG_PATH ] && rm $INSTALLED_RYE_CONFIG_PATH
+    cp $HOME/.rye/config.toml $INSTALLED_RYE_CONFIG_PATH
+fi
+
 
 rye pin cpython@$INPUT_PYTHON_VERSION
 
 INSTALLED_RYE_VERSION=$(rye --version | awk '{print $2}' | head -n 1)
-INSTALLED_RYE_HOME=$(dirname $(dirname $(which rye)))
 PINNED_PYTHON_VERSION=$(cat .python-version)
 USE_UV=$(rye config --get behavior.use-uv)
 echo "rye-version=${INSTALLED_RYE_VERSION}"    >> $GITHUB_OUTPUT
