@@ -39,7 +39,13 @@ def merge_toml(*datas: dict[str, Any]) -> dict[str, Any]:
         value = data.copy()
         source = value.pop("sources", None)
 
-        result.update(value)
+        for key, sub_value in value.items():
+            if not isinstance(sub_value, dict):
+                continue
+
+            origin_value: dict[str, Any] = result.setdefault(key, {})
+            origin_value.update(sub_value)
+
         if not source or not isinstance(source, list):
             continue
 
