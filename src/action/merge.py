@@ -4,7 +4,6 @@ from __future__ import annotations
 import shlex
 import subprocess
 import sys
-import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +16,8 @@ def install_toml() -> None:
 
 def load_toml(path: str | Path) -> dict[str, Any] | None:
     """toml to dict or null"""
+    import toml  # pyright: ignore[reportMissingModuleSource]
+
     if isinstance(path, str):
         path = Path(path)
     path = path.resolve()
@@ -24,8 +25,8 @@ def load_toml(path: str | Path) -> dict[str, Any] | None:
     if not path.exists():
         return None
 
-    with path.open("rb") as file:
-        return tomllib.load(file)
+    with path.open("r") as file:
+        return toml.load(file)
 
 
 def merge_toml(*datas: dict[str, Any]) -> dict[str, Any]:
@@ -61,6 +62,8 @@ def dump_toml(path: str | Path, data: dict[str, Any]) -> None:
 
 
 def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
+    install_toml()
+
     data = load_toml(file)
     if data is None:
         raise FileNotFoundError(file)
@@ -72,7 +75,6 @@ def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
 
     result = merge_toml(data, *tomls)
 
-    install_toml()
     dump_toml(file, result)
 
 
