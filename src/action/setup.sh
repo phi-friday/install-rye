@@ -2,7 +2,7 @@
 
 # https://stackoverflow.com/a/4774063
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-MERGE_SCRIPT=${SCRIPTPATH}/merge.sh
+MERGE_SCRIPT=${SCRIPTPATH}/merge.py
 
 rye config --set-bool behavior.use-uv=$INPUT_USE_UV
 rye pin cpython@$INPUT_PYTHON_VERSION
