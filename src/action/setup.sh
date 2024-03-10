@@ -16,4 +16,5 @@ echo "rye-home=${INSTALLED_RYE_HOME}"          >> $GITHUB_OUTPUT
 echo "python-version=${PINNED_PYTHON_VERSION}" >> $GITHUB_OUTPUT
 echo "use-uv=${USE_UV}"                        >> $GITHUB_OUTPUT
 
+python3 -m pip install --user toml
 python3 $MERGE_SCRIPT $(rye config --show-path) $HOME/.rye/config.toml

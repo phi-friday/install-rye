@@ -1,22 +1,15 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import shlex
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any
 
-
-def install_toml() -> None:
-    """pip install toml"""
-    command = f"{sys.executable} -m pip install toml"
-    subprocess.run(shlex.split(command), check=True)  # noqa: S603
+import toml  # pyright: ignore[reportMissingModuleSource]
 
 
 def load_toml(path: str | Path) -> dict[str, Any] | None:
     """toml to dict or null"""
-    import toml  # pyright: ignore[reportMissingModuleSource]
 
     if isinstance(path, str):
         path = Path(path)
@@ -51,7 +44,6 @@ def merge_toml(*datas: dict[str, Any]) -> dict[str, Any]:
 
 def dump_toml(path: str | Path, data: dict[str, Any]) -> None:
     """dict to toml"""
-    import toml  # pyright: ignore[reportMissingModuleSource]
 
     if isinstance(path, str):
         path = Path(path)
@@ -62,8 +54,6 @@ def dump_toml(path: str | Path, data: dict[str, Any]) -> None:
 
 
 def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
-    install_toml()
-
     data = load_toml(file)
     if data is None:
         raise FileNotFoundError(file)
