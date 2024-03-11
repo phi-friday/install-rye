@@ -8,7 +8,7 @@ from http.client import HTTPException
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 from define import (
     RYE_SCRIPT_URL,
@@ -27,7 +27,15 @@ def download_rye_install_script(path: str | Path) -> None:
     path = ensure_path(path)
 
     response: HTTPResponse
-    with urlopen(RYE_SCRIPT_URL, timeout=5) as response:  # noqa: S310
+    request = Request(  # noqa: S310
+        RYE_SCRIPT_URL,
+        headers={
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        },
+    )
+    with urlopen(request, timeout=5) as response:  # noqa: S310
         if response.status != HTTPStatus.OK:
             raise HTTPException(response.status)
         body = response.read()
