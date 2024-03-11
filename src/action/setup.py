@@ -7,7 +7,7 @@ from os import environ
 from pathlib import Path
 
 import merge
-from define import call_function_using_sys_argv, ensure_path, set_in_action
+from define import call_function_using_sys_argv, ensure_path, logger, set_in_action
 
 
 def setup_rye_config_use_uv(use_uv: str) -> str:
@@ -100,6 +100,8 @@ def get_rye_version() -> str:
 
 
 def main(python_version: str, use_uv: str) -> None:
+    logger.debug("paths: %s", environ["PATH"])
+
     use_uv = setup_rye_config_use_uv(use_uv)
     real_config = merge_config()
     rye_home = real_config.parent.as_posix()

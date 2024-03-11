@@ -54,6 +54,8 @@ jobs:
       - uses: phi-friday/install-rye@use-python
         id: install-rye
         name: "${{ matrix.name }}"
+        env:
+          IS_DEBUG: "1"
         with:
           rye_version: "${{ matrix.rye_version }}"
           rye_home: "${{ matrix.rye_home }}"
