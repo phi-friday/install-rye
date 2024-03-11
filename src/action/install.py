@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import shlex
+import subprocess
+from http import HTTPStatus
+from http.client import HTTPException
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from typing import TYPE_CHECKING
+from urllib.request import urlopen
+
+from define import (
+    RYE_SCRIPT_URL,
+    add_path_in_action,
+    call_function_using_sys_argv,
+    ensure_path,
+)
+
+if TYPE_CHECKING:
+    from http.client import HTTPResponse
+
+__all__ = []
+
+
+def download_rye_install_script(path: str | Path) -> None:
+    path = ensure_path(path)
+
+    response: HTTPResponse
+    with urlopen(RYE_SCRIPT_URL, timeout=5) as response:  # noqa: S310
+        if response.status != HTTPStatus.OK:
+            raise HTTPException(response.status)
+        body = response.read()
+
+    with path.open("wb+") as file:
+        file.write(body)
+
+
+def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> None:
+    path = ensure_path(path)
+    path = path.resolve()
+
+    rye_home = ensure_path(rye_home)
+    rye_home = rye_home.resolve()
+
+    path_as_string = path.as_posix()
+    rye_home_as_string = rye_home.as_posix()
+
+    envs = {
+        "RYE_VERSION": rye_version,
+        "RYE_HOME": rye_home_as_string,
+        "RYE_INSTALL_OPTION": "--yes",
+    }
+
+    command = f"bash {path_as_string}"
+    subprocess.run(shlex.split(command), check=True, env=envs)  # noqa: S603
+
+
+def main(rye_version: str, rye_home: str | Path) -> None:
+    rye_home = ensure_path(rye_home)
+    rye_home = rye_home.resolve()
+
+    with TemporaryDirectory(prefix="install_rye_") as temp_dir:
+        temp_dir_path = Path(temp_dir)
+        rye_script_path = temp_dir_path / "rye.sh"
+
+        download_rye_install_script(rye_script_path)
+        install_rye(rye_script_path, rye_version, rye_home)
+
+    shims = rye_home / "shims"
+
+    add_path_in_action(shims)
+
+
+if __name__ == "__main__":
+    call_function_using_sys_argv(main)

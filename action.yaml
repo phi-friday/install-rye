@@ -11,29 +11,29 @@ runs:
     - name: prepare rye
       id: prepare-rye
       shell: bash
-      env:
-        INPUT_RYE_VERSION: ${{ inputs.rye_version }}
-        INPUT_RYE_HOME: ${{ inputs.rye_home }}
-        INPUT_PYTHON_VERSION: ${{ inputs.python_version }}
-        INPUT_USE_UV: ${{ inputs.use_uv }}
-      run: $GITHUB_ACTION_PATH/src/action/prepare.sh
+      run: |
+        python3 $GITHUB_ACTION_PATH/src/action/prepare.py \
+        ${{ inputs.rye_version }} \
+        ${{ inputs.rye_home }} \
+        ${{ inputs.python_version }} \
+        ${{ inputs.use_uv }}
 
     - name: install rye
       id: install-rye
       shell: bash
-      env:
-        RYE_INSTALL_OPTION: '--yes'
-        RYE_VERSION: ${{ steps.prepare-rye.outputs.rye-version }}
-        RYE_HOME: ${{ steps.prepare-rye.outputs.rye-home }}
-      run: $GITHUB_ACTION_PATH/src/action/install.sh
+      run: |
+        python $GITHUB_ACTION_PATH/src/action/install.py \
+        ${{ steps.prepare-rye.outputs.rye-version }} \
+        ${{ steps.prepare-rye.outputs.rye-home }}
+
 
     - name: setup rye
       id: setup-rye
       shell: bash
-      env:
-        INPUT_PYTHON_VERSION: ${{ steps.prepare-rye.outputs.python-version }}
-        INPUT_USE_UV: ${{ steps.prepare-rye.outputs.use-uv }}
-      run: $GITHUB_ACTION_PATH/src/action/setup.sh
+      run: |
+        python $GITHUB_ACTION_PATH/src/action/setup.py \
+        ${{ steps.prepare-rye.outputs.python-version }} \
+        ${{ steps.prepare-rye.outputs.use-uv }}
 
 inputs:
   rye_version:

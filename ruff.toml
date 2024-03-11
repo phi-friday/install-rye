@@ -78,6 +78,7 @@ ignore = [
     "COM819", # prohibited-trailing-comma
     "ISC001", # single-line-implicit-string-concatenation
     "ISC002", # multi-line-implicit-string-concatenation
+    "INP001", # implicit-namespace-package
 ]
 
 [format]
