@@ -61,7 +61,7 @@ def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> Non
         "RYE_VERSION": rye_version,
         "RYE_HOME": rye_home_as_string,
         "RYE_INSTALL_OPTION": "--yes",
-        "RUST_BACKTRACE": os.getenv("IS_DEBUG", "0"),
+        "RUST_BACKTRACE": "full" if os.getenv("IS_DEBUG", "0") == "1" else "",
     }
 
     command = f"bash {path_as_string}"
