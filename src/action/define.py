@@ -54,7 +54,15 @@ def get_logger() -> logging.Logger:
     if logger.hasHandlers():
         return logger
 
-    logger.addHandler(logging.StreamHandler(sys.stdout))
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(
+        logging.Formatter(
+            "[%(asctime)s] %(levelname)s "
+            "[%(name)s.%(funcName)s:%(lineno)d] %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+    )
+    logger.addHandler(handler)
 
     if os.getenv("IS_DEBUG", "0") == "1":
         logger.setLevel(logging.DEBUG)

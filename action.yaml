@@ -32,7 +32,7 @@ runs:
       shell: bash
       run: |
         python $GITHUB_ACTION_PATH/src/action/setup.py \
-        ${{ steps.prepare-rye.outputs.rye-shims }}/rye \
+        ${{ steps.install-rye.outputs.rye-shims }}/rye \
         ${{ steps.prepare-rye.outputs.python-version }} \
         ${{ steps.prepare-rye.outputs.use-uv }}
 
