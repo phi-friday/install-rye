@@ -102,6 +102,7 @@ def add_path_in_action(path: str | Path) -> None:
     path = path.resolve()
     path_as_string = path.as_posix()
 
+    logger.info("add path: %s", path)
     with _GITHUB_PATH.open("a") as fh:
         print(path_as_string, file=fh)
 
