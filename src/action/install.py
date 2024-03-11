@@ -16,6 +16,7 @@ from define import (
     call_function_using_sys_argv,
     ensure_path,
     logger,
+    set_in_action,
 )
 
 if TYPE_CHECKING:
@@ -88,26 +89,10 @@ def main(rye_version: str, rye_home: str | Path) -> None:
         install_rye(rye_script_path, rye_version, rye_home)
 
     shims = rye_home / "shims"
+    shims_as_string = shims.as_posix()
 
     add_path_in_action(shims)
-
-    process = subprocess.run(
-        shlex.split(f"ls {rye_home.as_posix()}"),
-        check=True,
-        text=True,
-        capture_output=True,
-        shell=True,  # noqa: S602
-    )
-    logger.info(process.stdout)
-
-    process = subprocess.run(
-        shlex.split(f"ls {shims.as_posix()}"),
-        check=True,
-        text=True,
-        capture_output=True,
-        shell=True,  # noqa: S602
-    )
-    logger.info(process.stdout)
+    set_in_action("rye-shims", shims_as_string, "output")
 
 
 if __name__ == "__main__":

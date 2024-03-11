@@ -7,34 +7,7 @@ from os import environ
 from pathlib import Path
 
 import merge
-from define import call_function_using_sys_argv, ensure_path, logger, set_in_action
-
-
-def find_rye_absoulte() -> str:
-    process = subprocess.run(
-        shlex.split("ls /home/runner/.rye/shims"),
-        check=True,
-        text=True,
-        capture_output=True,
-        shell=True,  # noqa: S602
-    )
-    logger.info(process.stdout)
-
-    command = "which rye"
-    try:
-        process = subprocess.run(
-            shlex.split(command),
-            check=True,
-            text=True,
-            capture_output=True,
-            shell=True,  # noqa: S602
-        )
-    except subprocess.CalledProcessError as exc:
-        logger.error(exc.stdout)
-        logger.error(exc.stderr)
-        raise
-
-    return process.stdout.strip()
+from define import call_function_using_sys_argv, ensure_path, set_in_action
 
 
 def setup_rye_config_use_uv(rye: str, use_uv: str) -> str:
@@ -118,9 +91,7 @@ def get_rye_version(rye: str) -> str:
     return output.splitlines()[0].split()[1]
 
 
-def main(python_version: str, use_uv: str) -> None:
-    rye = find_rye_absoulte()
-
+def main(rye: str, python_version: str, use_uv: str) -> None:
     use_uv = setup_rye_config_use_uv(rye, use_uv)
     real_config = merge_config(rye)
     rye_home = real_config.parent.as_posix()
