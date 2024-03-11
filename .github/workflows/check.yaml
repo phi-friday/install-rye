@@ -61,17 +61,8 @@ jobs:
           use_uv: "${{ matrix.use_uv }}"
 
       - name: echo stats
-        env:
-          INPUT_RYE_VERSION: ${{ matrix.rye_version }}
-          INPUT_RYE_HOME: ${{ matrix.rye_home }}
-          INPUT_PYTHON_VERSION: ${{ matrix.python_version }}
-          INPUT_USE_UV: ${{ matrix.use_uv }}
-          REAL_RYE_VERSION: "${{ steps.install-rye.outputs.rye-version }}"
-          REAL_RYE_HOME: "${{ steps.install-rye.outputs.rye-home }}"
-          REAL_PYTHON_VERSION: "${{ steps.install-rye.outputs.python-version }}"
-          REAL_USE_UV: "${{ steps.install-rye.outputs.use-uv }}"
         run: |
-          python ./src/action/check.py \
+          ./src/action/check.py \
           ${{ matrix.rye_version }}:${{ steps.install-rye.outputs.rye-version }} \
           ${{ matrix.rye_home }}:${{ steps.install-rye.outputs.rye-home }} \
           ${{ matrix.python_version }}:${{ steps.install-rye.outputs.python-version }} \
