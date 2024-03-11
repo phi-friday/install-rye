@@ -74,7 +74,8 @@ def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> Non
             text=True,
         )
     except subprocess.CalledProcessError as exc:
-        logger.error(exc.output)
+        logger.error(exc.stdout)
+        logger.error(exc.stderr)
         raise
 
     logger.info(process.stdout)
