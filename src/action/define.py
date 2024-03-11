@@ -49,13 +49,19 @@ DEFAULT_VALUES: dict[str, str] = {
 RYE_SCRIPT_URL = "https://rye-up.com/get"
 
 
-logger = logging.getLogger("install-rye.merge")
-logger.addHandler(logging.StreamHandler(sys.stdout))
+def get_logger() -> logging.Logger:
+    logger = logging.getLogger("install-rye.merge")
+    if logger.hasHandlers():
+        return logger
 
-if os.getenv("IS_DEBUG", "0") == "1":
-    logger.setLevel(logging.DEBUG)
-else:
-    logger.setLevel(logging.INFO)
+    logger.addHandler(logging.StreamHandler(sys.stdout))
+
+    if os.getenv("IS_DEBUG", "0") == "1":
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
+
+    return logger
 
 
 def if_default_set_value(
@@ -124,3 +130,6 @@ def inspect_function_variables() -> dict[str, Any]:
     assert frame is not None  # noqa: S101
     arg_info = inspect.getargvalues(frame)
     return {x: arg_info.locals[x] for x in arg_info.args}
+
+
+logger = get_logger()

@@ -12,7 +12,7 @@ from define import call_function_using_sys_argv, ensure_path, logger, set_in_act
 
 def find_rye_absoulte() -> str:
     process = subprocess.run(
-        shlex.split("ls -al /home/runner/.rye/shims"),
+        shlex.split("ls /home/runner/.rye/shims"),
         check=True,
         text=True,
         capture_output=True,
