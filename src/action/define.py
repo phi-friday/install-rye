@@ -50,7 +50,7 @@ RYE_SCRIPT_URL = "https://rye-up.com/get"
 
 
 def get_logger() -> logging.Logger:
-    logger = logging.getLogger("install-rye.merge")
+    logger = logging.getLogger("install-rye")
     if logger.hasHandlers():
         return logger
 
