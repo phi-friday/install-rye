@@ -3,28 +3,26 @@ import inspect
 from os import environ
 
 from define import (
-    DEFAULT_PYTHON_VERSION,
-    DEFAULT_RYE_HOME,
-    DEFAULT_RYE_VERSION,
-    DEFAULT_USE_UV,
+    DEFAULT_VALUES,
     call_function_using_sys_argv,
     if_default_set_value,
+    inspect_function_variables,
+    logger,
     set_in_action,
 )
 
 
-def main(rye_version: str, rye_home: str, python_version: str, use_uv: str) -> None:
+def main(
+    rye_version: str, rye_home: str, python_version: str, use_uv: str
+) -> dict[str, str]:
     signature = inspect.signature(main)
-    params: dict[str, str] = dict(
-        signature.bind(rye_version, rye_home, python_version, use_uv).arguments
-    )
+    args = inspect_function_variables()
+    params: dict[str, str] = dict(signature.bind(**args).arguments)
 
     home = environ["HOME"]
 
-    for (key, value), (default) in zip(
-        tuple(params.items()),
-        (DEFAULT_RYE_VERSION, DEFAULT_RYE_HOME, DEFAULT_PYTHON_VERSION, DEFAULT_USE_UV),
-    ):
+    for key, value in tuple(params.items()):
+        default = DEFAULT_VALUES[key]
         params[key] = if_default_set_value(value, default, value)
 
     params["rye_home"] = if_default_set_value(
@@ -32,8 +30,11 @@ def main(rye_version: str, rye_home: str, python_version: str, use_uv: str) -> N
     )
 
     for key, value in params.items():
+        logger.info("%s: %s", key.replace("_", " "), value)
         output_key = key.replace("_", "-")
         set_in_action(output_key, value, "output")
+
+    return params
 
 
 if __name__ == "__main__":

@@ -70,7 +70,12 @@ jobs:
           REAL_RYE_HOME: "${{ steps.install-rye.outputs.rye-home }}"
           REAL_PYTHON_VERSION: "${{ steps.install-rye.outputs.python-version }}"
           REAL_USE_UV: "${{ steps.install-rye.outputs.use-uv }}"
-        run: ./src/action/check.sh
+        run: |
+          python ./src/action/check.sh \
+          ${{ matrix.rye_version }}:${{ steps.install-rye.outputs.rye-version }} \
+          ${{ matrix.rye_home }}:${{ steps.install-rye.outputs.rye-home }} \
+          ${{ matrix.python_version }}:${{ steps.install-rye.outputs.python-version }} \
+          ${{ matrix.use_uv }}:${{ steps.install-rye.outputs.use-uv }}
 
   prepare-cache:
     runs-on: ubuntu-latest

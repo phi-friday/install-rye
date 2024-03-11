@@ -80,6 +80,9 @@ ignore = [
     "ISC002", # multi-line-implicit-string-concatenation
     "INP001", # implicit-namespace-package
 ]
+[lint.per-file-ignores]
+"./src/action/check.py" = ["ARG001"]
+"./src/action/prepare.py" = ["ARG001"]
 
 [format]
 indent-style = "space"
