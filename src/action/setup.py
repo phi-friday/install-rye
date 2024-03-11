@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import shlex
 import subprocess
+import sys
 from os import environ
 from pathlib import Path
 
-import merge
 from define import call_function_using_sys_argv, ensure_path, set_in_action
 
 
@@ -62,7 +62,12 @@ def merge_config(rye: str) -> Path:
 
     config = get_rye_config_path(rye)
     real_config = get_real_rye_config_path(rye)
-    merge.main(default_config, real_config, config)
+
+    command = (
+        f"{sys.executable} {default_config.as_posix()} "
+        f"{real_config.as_posix()} {config.as_posix()}"
+    )
+    subprocess.run(shlex.split(command), check=True)  # noqa: S603
 
     if default_rye_path == real_config:
         return real_config

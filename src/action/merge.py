@@ -115,3 +115,7 @@ def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
     result = merge_toml(data, *tomls)
 
     dump_toml(file, result)
+
+
+if __name__ == "__main__":
+    main(*sys.argv[1:])
