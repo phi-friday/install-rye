@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import os
 import shlex
 import subprocess
 from http import HTTPStatus
@@ -60,6 +61,7 @@ def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> Non
         "RYE_VERSION": rye_version,
         "RYE_HOME": rye_home_as_string,
         "RYE_INSTALL_OPTION": "--yes",
+        "RUST_BACKTRACE": os.getenv("IS_DEBUG", "0"),
     }
 
     command = f"bash {path_as_string}"
@@ -72,8 +74,7 @@ def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> Non
             text=True,
         )
     except subprocess.CalledProcessError as exc:
-        logger.error(exc.stdout)
-        logger.error(exc.stderr)
+        logger.error(exc.output)
         raise
 
     logger.info(process.stdout)
