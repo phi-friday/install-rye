@@ -21,18 +21,18 @@ runs:
     - name: install rye
       id: install-rye
       shell: bash
-      run: |
-        python $GITHUB_ACTION_PATH/src/action/install.py \
-        ${{ steps.prepare-rye.outputs.rye-version }} \
-        ${{ steps.prepare-rye.outputs.rye-home }}
-
+      env:
+        RYE_INSTALL_OPTION: '--yes'
+        RYE_VERSION: ${{ steps.prepare-rye.outputs.rye-version }}
+        RYE_HOME: ${{ steps.prepare-rye.outputs.rye-home }}
+      run: $GITHUB_ACTION_PATH/src/action/install.sh
 
     - name: setup rye
       id: setup-rye
       shell: bash
       run: |
         python $GITHUB_ACTION_PATH/src/action/setup.py \
-        ${{ steps.install-rye.outputs.rye-shims }}/rye \
+        rye \
         ${{ steps.prepare-rye.outputs.python-version }} \
         ${{ steps.prepare-rye.outputs.use-uv }}
 
