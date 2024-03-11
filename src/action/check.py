@@ -27,7 +27,7 @@ def main(rye_version: str, rye_home: str, python_version: str, use_uv: str) -> N
         inputs[key], result[key] = input_value, result_value = value.split(SEPARATOR, 1)
         logger.info("%s: %s", key, input_value)
 
-        prepare_data[key] = if_default_set_value(input_value, input_value, result_value)
+        prepare_data[key] = if_default_set_value(input_value, result_value, input_value)
 
     logger.info("\nexpected:")
     prepare_data = prepare.main(**prepare_data)
