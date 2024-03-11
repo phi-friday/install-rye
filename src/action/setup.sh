@@ -9,7 +9,6 @@ rye config --set-bool behavior.use-uv=$INPUT_USE_UV
 INSTALLED_RYE_HOME=$(dirname $(dirname $(which rye)))
 RYE_CONFIG_PATH=$(rye config --show-path)
 INSTALLED_RYE_CONFIG_PATH=$INSTALLED_RYE_HOME/config.toml
-python3 -m pip install --user toml
 python3 $MERGE_SCRIPT $HOME/.rye/config.toml $RYE_CONFIG_PATH $INSTALLED_RYE_CONFIG_PATH
 if [ "$HOME/.rye/config.toml" != "$INSTALLED_RYE_CONFIG_PATH" ]; then
     [ -e $INSTALLED_RYE_CONFIG_PATH ] && rm $INSTALLED_RYE_CONFIG_PATH
