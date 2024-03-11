@@ -21,6 +21,7 @@ def find_rye_absoulte() -> str:
             shell=True,  # noqa: S602
         )
     except subprocess.CalledProcessError as exc:
+        logger.error(exc.stdout)
         logger.error(exc.stderr)
         raise
 

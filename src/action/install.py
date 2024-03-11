@@ -65,6 +65,7 @@ def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> Non
     try:
         subprocess.run(shlex.split(command), check=True, env=envs, shell=True)  # noqa: S602
     except subprocess.CalledProcessError as exc:
+        logger.error(exc.stdout)
         logger.error(exc.stderr)
         raise
 
