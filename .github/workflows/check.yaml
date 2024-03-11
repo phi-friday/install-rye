@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: phi-friday/install-rye@main
+      - uses: phi-friday/install-rye@use-python
         id: install-rye
         name: "${{ matrix.name }}"
         with:
