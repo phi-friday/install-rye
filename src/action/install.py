@@ -15,6 +15,7 @@ from define import (
     add_path_in_action,
     call_function_using_sys_argv,
     ensure_path,
+    logger,
 )
 
 if TYPE_CHECKING:
@@ -61,7 +62,11 @@ def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> Non
     }
 
     command = f"bash {path_as_string}"
-    subprocess.run(shlex.split(command), check=True, env=envs, shell=True)  # noqa: S602
+    try:
+        subprocess.run(shlex.split(command), check=True, env=envs, shell=True)  # noqa: S602
+    except subprocess.CalledProcessError as exc:
+        logger.error(exc.stderr)
+        raise
 
 
 def main(rye_version: str, rye_home: str | Path) -> None:

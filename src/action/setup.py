@@ -7,18 +7,23 @@ from os import environ
 from pathlib import Path
 
 import merge
-from define import call_function_using_sys_argv, ensure_path, set_in_action
+from define import call_function_using_sys_argv, ensure_path, logger, set_in_action
 
 
 def find_rye_absoulte() -> str:
     command = "which rye"
-    process = subprocess.run(
-        shlex.split(command),
-        check=True,
-        text=True,
-        capture_output=True,
-        shell=True,  # noqa: S602
-    )
+    try:
+        process = subprocess.run(
+            shlex.split(command),
+            check=True,
+            text=True,
+            capture_output=True,
+            shell=True,  # noqa: S602
+        )
+    except subprocess.CalledProcessError as exc:
+        logger.error(exc.stderr)
+        raise
+
     return process.stdout.strip()
 
 
