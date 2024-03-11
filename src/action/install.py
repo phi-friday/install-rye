@@ -91,6 +91,24 @@ def main(rye_version: str, rye_home: str | Path) -> None:
 
     add_path_in_action(shims)
 
+    process = subprocess.run(
+        shlex.split(f"ls {rye_home.as_posix()}"),
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=True,  # noqa: S602
+    )
+    logger.info(process.stdout)
+
+    process = subprocess.run(
+        shlex.split(f"ls {shims.as_posix()}"),
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=True,  # noqa: S602
+    )
+    logger.info(process.stdout)
+
 
 if __name__ == "__main__":
     call_function_using_sys_argv(main)
