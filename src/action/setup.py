@@ -7,14 +7,26 @@ from os import environ
 from pathlib import Path
 
 import merge
-from define import call_function_using_sys_argv, ensure_path, logger, set_in_action
+from define import call_function_using_sys_argv, ensure_path, set_in_action
 
 
-def setup_rye_config_use_uv(use_uv: str) -> str:
-    command = f"rye config --set-bool behavior.use-uv={use_uv}"
+def find_rye_absoulte() -> str:
+    command = "which rye"
+    process = subprocess.run(
+        shlex.split(command),
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=True,  # noqa: S602
+    )
+    return process.stdout.strip()
+
+
+def setup_rye_config_use_uv(rye: str, use_uv: str) -> str:
+    command = f"{rye} config --set-bool behavior.use-uv={use_uv}"
     subprocess.run(shlex.split(command), check=True)  # noqa: S603
 
-    command = "rye config --get behavior.use-uv"
+    command = f"{rye} config --get behavior.use-uv"
     process = subprocess.run(
         shlex.split(command),  # noqa: S603
         check=True,
@@ -25,23 +37,15 @@ def setup_rye_config_use_uv(use_uv: str) -> str:
     return process.stdout.strip()
 
 
-def get_real_rye_config_path() -> Path:
-    command = "which rye"
-    process = subprocess.run(
-        shlex.split(command),  # noqa: S603
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    path = process.stdout.strip()
-    path = ensure_path(path)
+def get_real_rye_config_path(rye: str) -> Path:
+    path = ensure_path(rye)
     path = path.resolve()
 
     return path.parent.with_name("config.toml")
 
 
-def get_rye_config_path() -> Path:
-    command = "rye config --show-path"
+def get_rye_config_path(rye: str) -> Path:
+    command = f"{rye} config --show-path"
     process = subprocess.run(
         shlex.split(command),  # noqa: S603
         check=True,
@@ -53,8 +57,8 @@ def get_rye_config_path() -> Path:
     return path.resolve()
 
 
-def setup_python_version(python_version: str) -> str:
-    command = f"rye pin cpython@{python_version}"
+def setup_python_version(rye: str, python_version: str) -> str:
+    command = f"{rye} pin cpython@{python_version}"
     subprocess.run(shlex.split(command), check=True)  # noqa: S603
 
     python_version_path = Path(".python-version").resolve()
@@ -63,13 +67,13 @@ def setup_python_version(python_version: str) -> str:
     return text.strip()
 
 
-def merge_config() -> Path:
+def merge_config(rye: str) -> Path:
     default_rye_path = Path(environ["HOME"]).resolve() / ".rye"
     default_rye_path.mkdir(exist_ok=True)
     default_config = default_rye_path / "config.toml"
 
-    config = get_rye_config_path()
-    real_config = get_real_rye_config_path()
+    config = get_rye_config_path(rye)
+    real_config = get_real_rye_config_path(rye)
     merge.main(default_config, real_config, config)
 
     if default_rye_path == real_config:
@@ -87,8 +91,8 @@ def merge_config() -> Path:
     return real_config
 
 
-def get_rye_version() -> str:
-    command = "rye --version"
+def get_rye_version(rye: str) -> str:
+    command = f"{rye} --version"
     process = subprocess.run(
         shlex.split(command),  # noqa: S603
         check=True,
@@ -100,13 +104,13 @@ def get_rye_version() -> str:
 
 
 def main(python_version: str, use_uv: str) -> None:
-    logger.debug("paths: %s", environ["PATH"])
+    rye = find_rye_absoulte()
 
-    use_uv = setup_rye_config_use_uv(use_uv)
-    real_config = merge_config()
+    use_uv = setup_rye_config_use_uv(rye, use_uv)
+    real_config = merge_config(rye)
     rye_home = real_config.parent.as_posix()
-    python_version = setup_python_version(python_version)
-    rye_version = get_rye_version()
+    python_version = setup_python_version(rye, python_version)
+    rye_version = get_rye_version(rye)
 
     set_in_action("rye-version", rye_version, "output")
     set_in_action("rye-home", rye_home, "output")
