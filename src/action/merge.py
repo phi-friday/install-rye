@@ -3,11 +3,11 @@ from __future__ import annotations
 
 import logging
 import os
+import shlex
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
-
-import toml  # pyright: ignore[reportMissingModuleSource]
 
 logger = logging.getLogger("install-rye.merge")
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -18,8 +18,27 @@ else:
     logger.setLevel(logging.INFO)
 
 
+def check_toml() -> bool:
+    """check toml"""
+    command = f"{sys.executable} -m pip list"
+    result = subprocess.run(
+        shlex.split(command),  # noqa: S603
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return "toml" in result.stdout
+
+
+def install_toml() -> None:
+    """pip install toml"""
+    command = f"{sys.executable} -m pip install toml"
+    subprocess.run(shlex.split(command), check=True)  # noqa: S603
+
+
 def load_toml(path: str | Path) -> dict[str, Any] | None:
     """toml to dict or null"""
+    import toml  # pyright: ignore[reportMissingModuleSource]
 
     if isinstance(path, str):
         path = Path(path)
@@ -64,6 +83,7 @@ def merge_toml(*datas: dict[str, Any]) -> dict[str, Any]:
 
 def dump_toml(path: str | Path, data: dict[str, Any]) -> None:
     """dict to toml"""
+    import toml  # pyright: ignore[reportMissingModuleSource]
 
     if isinstance(path, str):
         path = Path(path)
@@ -80,6 +100,9 @@ def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
 
     logger.debug("output: %s", file)
     logger.debug("targets: %s", files)
+
+    if not check_toml():
+        install_toml()
 
     data = load_toml(file)
     if data is None:
