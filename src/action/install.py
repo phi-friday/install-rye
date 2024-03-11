@@ -65,12 +65,11 @@ def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> Non
     command = f"bash {path_as_string}"
     try:
         process = subprocess.run(
-            shlex.split(command),
+            shlex.split(command),  # noqa: S603
             check=True,
             capture_output=True,
             env=envs,
             text=True,
-            shell=True,  # noqa: S602
         )
     except subprocess.CalledProcessError as exc:
         logger.error(exc.stdout)
