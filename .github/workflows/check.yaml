@@ -77,7 +77,7 @@ jobs:
           UUID=$(uuidgen)
           echo "cache-id=${UUID}" >> $GITHUB_OUTPUT
 
-      - uses: phi-friday/install-rye@main
+      - uses: phi-friday/install-rye@use-python
         id: install-rye
         env:
           IS_DEBUG: "1"

@@ -61,7 +61,7 @@ def install_rye(path: str | Path, rye_version: str, rye_home: str | Path) -> Non
     }
 
     command = f"bash {path_as_string}"
-    subprocess.run(shlex.split(command), check=True, env=envs)  # noqa: S603
+    subprocess.run(shlex.split(command), check=True, env=envs, shell=True)  # noqa: S602
 
 
 def main(rye_version: str, rye_home: str | Path) -> None:
