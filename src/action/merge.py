@@ -30,6 +30,12 @@ def check_toml() -> bool:
     return "toml" in result.stdout
 
 
+def install_pip() -> None:
+    """install pip"""
+    command = f"{sys.executable} -m ensurepip --upgrade"
+    subprocess.run(shlex.split(command), check=True)  # noqa: S603
+
+
 def install_toml() -> None:
     """pip install toml"""
     command = f"{sys.executable} -m pip install --user toml"
@@ -101,6 +107,7 @@ def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
     logger.debug("output: %s", file)
     logger.debug("targets: %s", files)
 
+    install_pip()
     if not check_toml():
         install_toml()
 
