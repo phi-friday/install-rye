@@ -3,8 +3,6 @@ from __future__ import annotations
 
 import logging
 import os
-import shlex
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -16,44 +14,6 @@ if os.getenv("IS_DEBUG", "0") == "1":
     logger.setLevel(logging.DEBUG)
 else:
     logger.setLevel(logging.INFO)
-
-
-def check_toml() -> bool:
-    """check toml"""
-    command = f"{sys.executable} -c 'import toml'"
-    result = subprocess.run(  # noqa: S603
-        shlex.split(command), check=False, capture_output=True, text=True
-    )
-    try:
-        result.check_returncode()
-    except subprocess.CalledProcessError:
-        return False
-    return True
-
-
-def check_pip() -> bool:
-    """check pip"""
-    command = f"{sys.executable} -m pip --version"
-    result = subprocess.run(  # noqa: S603
-        shlex.split(command), check=False, capture_output=True, text=True
-    )
-    try:
-        result.check_returncode()
-    except subprocess.CalledProcessError:
-        return False
-    return True
-
-
-def install_pip() -> None:
-    """install pip"""
-    command = f"{sys.executable} -m ensurepip --upgrade"
-    subprocess.run(shlex.split(command), check=True)  # noqa: S603
-
-
-def install_toml() -> None:
-    """pip install toml"""
-    command = f"{sys.executable} -m pip install toml"
-    subprocess.run(shlex.split(command), check=True)  # noqa: S603
 
 
 def load_toml(path: str | Path) -> dict[str, Any] | None:
@@ -120,11 +80,6 @@ def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
 
     logger.debug("output: %s", file)
     logger.debug("targets: %s", files)
-
-    if not check_pip():
-        install_pip()
-    if not check_toml():
-        install_toml()
 
     data = load_toml(file)
     if data is None:
