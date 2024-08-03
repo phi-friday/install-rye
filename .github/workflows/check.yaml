@@ -58,3 +58,8 @@ jobs:
           REAL_RYE_HOME: "${{ steps.install-rye.outputs.rye-home }}"
           REAL_PYTHON_VERSION: "${{ steps.install-rye.outputs.python-version }}"
         run: ./src/action/check.sh
+
+      - name: check rye command
+        run: |
+          rye sync
+          rye run python -c "import toml"

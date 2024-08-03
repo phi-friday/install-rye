@@ -1,0 +1,27 @@
+[project]
+name = "install-rye"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "phi", email = "phi.friday@gmail.com" }
+]
+dependencies = [
+    "toml>=0.10.2",
+]
+readme = "README.md"
+requires-python = ">= 3"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+virtual = true
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = []
