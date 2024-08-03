@@ -4,6 +4,7 @@
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 MERGE_SCRIPT=${SCRIPTPATH}/merge.py
 
+echo $INPUT_PYTHON_VERSION >> .python-version
 rye config --set-bool behavior.use-uv=$INPUT_USE_UV
 
 INSTALLED_RYE_HOME=$(dirname $(dirname $(which rye)))
