@@ -6,6 +6,7 @@ MERGE_SCRIPT=${SCRIPTPATH}/merge.py
 
 echo $INPUT_PYTHON_VERSION >> .python-version
 rye pin cpython@$INPUT_PYTHON_VERSION
+rye fetch
 rye config --set-bool behavior.use-uv=$INPUT_USE_UV
 
 INSTALLED_RYE_HOME=$(dirname $(dirname $(which rye)))
