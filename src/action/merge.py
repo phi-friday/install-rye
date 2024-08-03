@@ -21,13 +21,23 @@ else:
 def check_toml() -> bool:
     """check toml"""
     command = f"{sys.executable} -m pip list"
-    result = subprocess.run(
-        shlex.split(command),  # noqa: S603
-        check=True,
-        capture_output=True,
-        text=True,
+    result = subprocess.run(  # noqa: S603
+        shlex.split(command), check=True, capture_output=True, text=True
     )
     return "toml" in result.stdout
+
+
+def check_pip() -> bool:
+    """check pip"""
+    command = f"{sys.executable} -m pip --version"
+    result = subprocess.run(  # noqa: S603
+        shlex.split(command), check=False, capture_output=True, text=True
+    )
+    try:
+        result.check_returncode()
+    except subprocess.CalledProcessError:
+        return False
+    return True
 
 
 def install_pip() -> None:
@@ -107,7 +117,8 @@ def main(file: str | Path, *files: str | Path) -> None:  # noqa: D103
     logger.debug("output: %s", file)
     logger.debug("targets: %s", files)
 
-    install_pip()
+    if not check_pip():
+        install_pip()
     if not check_toml():
         install_toml()
 
