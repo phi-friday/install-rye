@@ -15,7 +15,6 @@ runs:
         INPUT_RYE_VERSION: ${{ inputs.rye_version }}
         INPUT_RYE_HOME: ${{ inputs.rye_home }}
         INPUT_PYTHON_VERSION: ${{ inputs.python_version }}
-        INPUT_USE_UV: ${{ inputs.use_uv }}
       run: $GITHUB_ACTION_PATH/src/action/prepare.sh
 
     - name: install rye
@@ -32,7 +31,6 @@ runs:
       shell: bash
       env:
         INPUT_PYTHON_VERSION: ${{ steps.prepare-rye.outputs.python-version }}
-        INPUT_USE_UV: ${{ steps.prepare-rye.outputs.use-uv }}
       run: $GITHUB_ACTION_PATH/src/action/setup.sh
 
 inputs:
@@ -45,9 +43,6 @@ inputs:
   python_version:
     description: The version of python that rye will use in the workspace
     default: "default"
-  use_uv:
-    description: if 'true', then use uv. else use pip-tools.
-    default: "default"
 
 outputs:
   rye-version:
@@ -59,6 +54,3 @@ outputs:
   python-version:
     description: pinned python version
     value: ${{ steps.setup-rye.outputs.python-version }}
-  use-uv:
-    description: use uv flag
-    value: ${{ steps.setup-rye.outputs.use-uv }}

@@ -3,7 +3,6 @@
 DEFAULT_RYE_VERSION="latest"
 DEFAULT_RYE_HOME=""
 DEFAULT_PYTHON_VERSION="3.12"
-DEFAULT_USE_UV="true"
 
 function set_default {
     [ "$1" = "default" ] && echo "$2" || echo "$1"

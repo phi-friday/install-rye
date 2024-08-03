@@ -20,32 +20,22 @@ jobs:
           - rye_version: "default"
             rye_home: "default"
             python_version: "default"
-            use_uv: "default"
             name: "check default"
           # check rye version
           - rye_version: "0.27.0"
             rye_home: "default"
             python_version: "default"
-            use_uv: "default"
             name: "check rye version"
           # check rye home
           - rye_version: "default"
             rye_home: "/opt/rye"
             python_version: "default"
-            use_uv: "default"
             name: "check rye home"
           # check python version
           - rye_version: "default"
             rye_home: "default"
             python_version: "3.8.15"
-            use_uv: "default"
             name: "check python version"
-          # check use uv flag
-          - rye_version: "default"
-            rye_home: "default"
-            python_version: "default"
-            use_uv: "false"
-            name: "check use uv"
 
     name: "${{ matrix.name }}"
     steps:
@@ -58,16 +48,13 @@ jobs:
           rye_version: "${{ matrix.rye_version }}"
           rye_home: "${{ matrix.rye_home }}"
           python_version: "${{ matrix.python_version }}"
-          use_uv: "${{ matrix.use_uv }}"
 
       - name: echo stats
         env:
           INPUT_RYE_VERSION: ${{ matrix.rye_version }}
           INPUT_RYE_HOME: ${{ matrix.rye_home }}
           INPUT_PYTHON_VERSION: ${{ matrix.python_version }}
-          INPUT_USE_UV: ${{ matrix.use_uv }}
           REAL_RYE_VERSION: "${{ steps.install-rye.outputs.rye-version }}"
           REAL_RYE_HOME: "${{ steps.install-rye.outputs.rye-home }}"
           REAL_PYTHON_VERSION: "${{ steps.install-rye.outputs.python-version }}"
-          REAL_USE_UV: "${{ steps.install-rye.outputs.use-uv }}"
         run: ./src/action/check.sh
