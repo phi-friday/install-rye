@@ -52,7 +52,7 @@ def install_pip() -> None:
 
 def install_toml() -> None:
     """pip install toml"""
-    command = f"{sys.executable} -m pip install --user toml"
+    command = f"{sys.executable} -m pip install toml"
     subprocess.run(shlex.split(command), check=True)  # noqa: S603
 
 
