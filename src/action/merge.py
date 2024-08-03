@@ -20,11 +20,15 @@ else:
 
 def check_toml() -> bool:
     """check toml"""
-    command = f"{sys.executable} -m pip list"
+    command = f"{sys.executable} -c 'import toml'"
     result = subprocess.run(  # noqa: S603
-        shlex.split(command), check=True, capture_output=True, text=True
+        shlex.split(command), check=False, capture_output=True, text=True
     )
-    return "toml" in result.stdout
+    try:
+        result.check_returncode()
+    except subprocess.CalledProcessError:
+        return False
+    return True
 
 
 def check_pip() -> bool:
