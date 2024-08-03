@@ -5,6 +5,7 @@ SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 MERGE_SCRIPT=${SCRIPTPATH}/merge.py
 
 echo $INPUT_PYTHON_VERSION >> .python-version
+rye pin cpython@$INPUT_PYTHON_VERSION
 rye config --set-bool behavior.use-uv=$INPUT_USE_UV
 
 INSTALLED_RYE_HOME=$(dirname $(dirname $(which rye)))
@@ -15,9 +16,6 @@ if [ "$HOME/.rye/config.toml" != "$INSTALLED_RYE_CONFIG_PATH" ]; then
     [ -e $INSTALLED_RYE_CONFIG_PATH ] && rm $INSTALLED_RYE_CONFIG_PATH
     cp $HOME/.rye/config.toml $INSTALLED_RYE_CONFIG_PATH
 fi
-
-
-rye pin cpython@$INPUT_PYTHON_VERSION
 
 INSTALLED_RYE_VERSION=$(rye --version | awk '{print $2}' | head -n 1)
 PINNED_PYTHON_VERSION=$(cat .python-version)
