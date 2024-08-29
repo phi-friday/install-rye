@@ -1,5 +1,10 @@
 # install-rye
 
+> [!CAUTION]
+> Migrate from `rye` to `uv`.
+> 
+> see more: https://github.com/astral-sh/rye/discussions/1342
+
 install [rye](https://github.com/astral-sh/rye) in github action
 
 ## how to use
